@@ -40,7 +40,11 @@ const init = async () => {
         createFavorite({user_id: katherine.id, product_id: cooking.id})
     ]);
 
+    console.log('nicks 2 favorites', await fetchFavorites(nick.id));
+
+    await deleteFavorite({ user_id: nick.id, id: favorites[0].id});
     console.log('nicks favorites', await fetchFavorites(nick.id));
+
 
     app.listen(port, () => console.log(`listening on port ${port}`));
 

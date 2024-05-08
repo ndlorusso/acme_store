@@ -37,12 +37,12 @@ const createUser = async ({ username, password }) => {
     VALUES($1, $2, $3)
     RETURNING *
     `;
-    const response = await client.query(SQL, [uuid.v4(), username, await bcrypt.hash(password, 5)]);
+    const response = await client.query(SQL, [uuid.v4(), username, await bcrypt.hash(password, 10)]);
     return response.rows[0];
 };
 
 
-const createProduct = async ({name}) => {
+const createProduct = async ({ name }) => {
     const SQL = `--sql
     INSERT INTO products(id, name)
     VALUES($1, $2)
@@ -68,6 +68,25 @@ const fetchProducts = async () => {
     return response.rows;
 };
 
+const createFavorite = async ({ user_id, product_id }) => {
+    const SQL = `--sql
+    INSERT INTO favorites(id, user_id, product_id)
+    VALUES($1, $2, $3)
+    RETURNING *
+    `;
+    const response = await client.query(SQL, [uuid.v4(), user_id, product_id]);
+    return response.rows[0];
+};
+
+const fetchFavorites = async (id) => {
+    const SQL = `--sql
+    SELECT * FROM favorites
+    WHERE user_id=$1
+    `;
+    const response = await client.query(SQL, [id]);
+    return response.rows;
+};
+
 module.exports = {
     client,
     createTables,
@@ -75,7 +94,7 @@ module.exports = {
     createProduct,
     fetchUsers,
     fetchProducts,
-//     createFavorite,
-//     fetchFavorites,
+    createFavorite,
+    fetchFavorites,
 //     deleteFavorite,
 };

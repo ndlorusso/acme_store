@@ -33,8 +33,14 @@ const init = async () => {
     const products = await fetchProducts();
     console.log(products);
 
-    // console.log(nick.id);
-    // console.log(electronics.id);
+    const favorites = await Promise.all([
+        createFavorite({user_id: nick.id, product_id: electronics.id}),
+        createFavorite({user_id: nick.id, product_id: books.id}),
+        createFavorite({user_id: sophia.id, product_id: books.id}),
+        createFavorite({user_id: katherine.id, product_id: cooking.id})
+    ]);
+
+    console.log('nicks favorites', await fetchFavorites(nick.id));
 
     app.listen(port, () => console.log(`listening on port ${port}`));
 

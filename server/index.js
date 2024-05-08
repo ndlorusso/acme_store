@@ -102,8 +102,6 @@ const init = async () => {
       `curl -X DELETE localhost:3000/api/users/${nick.id}/favorites/${favorites[0].id}`
     );
   
-
-
     app.listen(port, () => console.log(`listening on port ${port}`));
 
 };

@@ -92,6 +92,17 @@ const init = async () => {
     await deleteFavorite({ user_id: nick.id, id: favorites[0].id});
     console.log('nicks 1 favorite', await fetchFavorites(nick.id));
 
+    console.log(`curl localhost:3000/api/users/${nick.id}/favorites`);
+
+    console.log(
+      `curl -X POST localhost:3000/api/users/${nick.id}/favorites -d '{"product_id":"${cooking.id}"}' -H 'Content-Type:application/json'`
+    );
+  
+    console.log(
+      `curl -X DELETE localhost:3000/api/users/${nick.id}/favorites/${favorites[0].id}`
+    );
+  
+
 
     app.listen(port, () => console.log(`listening on port ${port}`));
 

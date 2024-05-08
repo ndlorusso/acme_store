@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(require('morgan')('dev'));
 
 app.get('/api/users', async (req, res, next) => {
-try {
+    try {
     res.send(await fetchUsers());
 } catch (error) {
     next(error);
@@ -30,6 +30,34 @@ app.get('/api/products', async (req, res, next) => {
         next(error);
     }
     });
+
+app.get('/api/users/:id/favorites', async (req, res, next) => {
+    try {
+        res.send(await fetchFavorites(req.params.id));
+    } catch (error) {
+        next(error);
+    }
+});
+
+app.post('/api/users/:id/favorites', async (req, res, next) => {
+    try {
+        res.status(201).send(await createFavorite({
+            user_id : req.params.id,
+            product_id : req.body.product_id,
+        }));
+    } catch (error) {
+        next(error);
+    }
+});
+
+app.delete('/api/users/:userId/favorites/:id', async (req, res, next) => {
+    try {
+        await deleteFavorite({id: req.params.id, user_id: req.params.user_Id});
+        res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+});
 
 const port = process.env.PORT || 3000;
 
@@ -50,7 +78,7 @@ const init = async () => {
     const users = await fetchUsers();
     console.log('display all users', users);
     const products = await fetchProducts();
-    console.log('display all products',products);
+    console.log('display all products', products);
 
     const favorites = await Promise.all([
         createFavorite({user_id: nick.id, product_id: electronics.id}),

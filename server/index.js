@@ -12,6 +12,25 @@ const { client,
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+app.use(require('morgan')('dev'));
+
+app.get('/api/users', async (req, res, next) => {
+try {
+    res.send(await fetchUsers());
+} catch (error) {
+    next(error);
+}
+});
+
+app.get('/api/products', async (req, res, next) => {
+    try {
+        res.send(await fetchProducts());
+    } catch (error) {
+        next(error);
+    }
+    });
+
 const port = process.env.PORT || 3000;
 
 const init = async () => {
@@ -29,9 +48,9 @@ const init = async () => {
     ]);
 
     const users = await fetchUsers();
-    console.log(users);
+    console.log('display all users', users);
     const products = await fetchProducts();
-    console.log(products);
+    console.log('display all products',products);
 
     const favorites = await Promise.all([
         createFavorite({user_id: nick.id, product_id: electronics.id}),
@@ -43,7 +62,7 @@ const init = async () => {
     console.log('nicks 2 favorites', await fetchFavorites(nick.id));
 
     await deleteFavorite({ user_id: nick.id, id: favorites[0].id});
-    console.log('nicks favorites', await fetchFavorites(nick.id));
+    console.log('nicks 1 favorite', await fetchFavorites(nick.id));
 
 
     app.listen(port, () => console.log(`listening on port ${port}`));
